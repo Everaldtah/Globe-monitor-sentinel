@@ -40,6 +40,7 @@ export interface GlobalEvent {
   status: EventStatus;
   tags: string[];
   summary?: string;
+  liveChannels?: LiveChannel[];
 }
 
 export interface NewsItem {
@@ -57,4 +58,44 @@ export interface MarketData {
   change: number;
   changePercent: number;
   type: string;
+}
+
+export interface FlightTrack {
+  id: string;
+  callsign?: string;
+  origin?: string;
+  destination?: string;
+  lat: number;
+  lng: number;
+  altitude?: number;
+  heading?: number;
+  speed?: number;
+  category: 'aircraft';
+}
+
+export interface VesselTrack {
+  id: string;
+  name?: string;
+  mmsi?: string;
+  lat: number;
+  lng: number;
+  sog?: number;
+  cog?: number;
+  category: 'vessel';
+}
+
+export interface WeatherOverlay {
+  lat: number;
+  lng: number;
+  cloudiness: number;
+  temperatureC: number;
+  windSpeed: number;
+  precipitationMm: number;
+}
+
+export interface LiveChannel {
+  platform: 'youtube';
+  title: string;
+  url: string;
+  source?: string;
 }
