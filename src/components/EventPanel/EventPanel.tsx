@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { GlobalEvent } from '@/lib/types';
 import { 
   AlertTriangle, MapPin, Clock, TrendingUp, ExternalLink, 
-  Shield, Activity, Wind, Zap, Heart
+  Shield, Wind, Zap, Heart
 } from 'lucide-react';
 
 interface EventPanelProps {
@@ -34,12 +34,11 @@ export default function EventPanel({ event, onClose }: EventPanelProps) {
 
   return (
     <motion.div
-      initial={{ x: 400, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 400, opacity: 0 }}
-      className="fixed right-0 top-0 h-full w-[420px] bg-bg-surface/95 backdrop-blur-xl border-l border-accent-cyan/20 overflow-y-auto z-50"
+      initial={{ y: 300, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 300, opacity: 0 }}
+      className="fixed inset-x-0 bottom-0 md:inset-y-0 md:right-0 md:left-auto md:bottom-auto h-[70vh] md:h-full w-full md:w-[420px] bg-bg-surface/95 backdrop-blur-xl border-t md:border-t-0 md:border-l border-accent-cyan/20 overflow-y-auto z-50 rounded-t-3xl md:rounded-none"
     >
-      {/* Header */}
       <div className="sticky top-0 bg-bg-surface/98 backdrop-blur-xl border-b border-accent-cyan/20 p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <CategoryIcon className="w-5 h-5 text-accent-cyan" />
@@ -51,7 +50,6 @@ export default function EventPanel({ event, onClose }: EventPanelProps) {
       </div>
 
       <div className="p-5 space-y-6">
-        {/* Severity Badge */}
         <div className="flex items-center gap-3">
           <span className={`px-3 py-1 text-xs font-bold uppercase rounded ${severityColors[event.severity]} bg-current/10 border border-current/30`}>
             {event.severity}
@@ -61,13 +59,11 @@ export default function EventPanel({ event, onClose }: EventPanelProps) {
           </span>
         </div>
 
-        {/* Title */}
         <div>
           <h2 className="text-xl font-bold text-white mb-2">{event.title}</h2>
           <p className="text-sm text-muted leading-relaxed">{event.description}</p>
         </div>
 
-        {/* Location */}
         <div className="flex items-start gap-3 p-3 bg-bg-panel rounded-lg border border-border/50">
           <MapPin className="w-5 h-5 text-accent-cyan mt-0.5" />
           <div>
@@ -76,14 +72,12 @@ export default function EventPanel({ event, onClose }: EventPanelProps) {
           </div>
         </div>
 
-        {/* Timestamp */}
         <div className="flex items-center gap-3 text-sm text-muted">
           <Clock className="w-4 h-4" />
           <span>{new Date(event.timestamp).toLocaleString()}</span>
           <span className="text-xs text-muted/50">Updated: {new Date(event.lastUpdated).toLocaleTimeString()}</span>
         </div>
 
-        {/* Affected Markets */}
         {event.affectedMarkets.length > 0 && (
           <div>
             <h3 className="text-xs uppercase tracking-wider text-muted mb-3 flex items-center gap-2">
@@ -111,7 +105,6 @@ export default function EventPanel({ event, onClose }: EventPanelProps) {
           </div>
         )}
 
-        {/* Tags */}
         <div className="flex flex-wrap gap-2">
           {event.tags.map((tag) => (
             <span key={tag} className="px-2 py-1 text-xs bg-bg-panel rounded border border-border/50 text-muted">
@@ -120,7 +113,6 @@ export default function EventPanel({ event, onClose }: EventPanelProps) {
           ))}
         </div>
 
-        {/* Sources */}
         <div>
           <h3 className="text-xs uppercase tracking-wider text-muted mb-2">Sources</h3>
           <div className="space-y-2">

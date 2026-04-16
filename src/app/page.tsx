@@ -6,7 +6,7 @@ import EventPanel from '@/components/EventPanel/EventPanel';
 import MarketCorrelations from '@/components/MarketCorrelations/MarketCorrelations';
 import NewsTicker from '@/components/NewsTicker/NewsTicker';
 import FilterSidebar from '@/components/FilterSidebar/FilterSidebar';
-import { Globe, Activity, AlertTriangle, Zap, Shield, Radio } from 'lucide-react';
+import { Globe, Activity, Shield } from 'lucide-react';
 
 // Dynamic import for 3D Globe (no SSR)
 const GlobeScene = dynamic(() => import('@/components/Globe/GlobeScene'), { 
@@ -117,7 +117,6 @@ export default function Home() {
   const [timeRange, setTimeRange] = useState('24h');
 
   useEffect(() => {
-    // Calculate stats
     setStats({
       total: events.length,
       critical: events.filter(e => e.severity === 'critical').length,
@@ -134,26 +133,24 @@ export default function Home() {
   });
 
   return (
-    <main className="h-screen w-screen overflow-hidden bg-bg relative scanline">
-      {/* Top Bar */}
-      <header className="absolute top-0 left-0 right-0 z-40 h-16 bg-bg-surface/80 backdrop-blur-xl border-b border-accent-cyan/20 flex items-center justify-between px-6">
-        <div className="flex items-center gap-4">
+    <main className="min-h-dvh w-full overflow-hidden bg-bg relative scanline">
+      <header className="absolute top-0 left-0 right-0 z-40 h-14 md:h-16 bg-bg-surface/80 backdrop-blur-xl border-b border-accent-cyan/20 flex items-center justify-between px-4 md:px-6">
+        <div className="flex items-center gap-3 md:gap-4">
           <div className="flex items-center gap-2">
-            <Globe className="w-8 h-8 text-accent-cyan" />
-            <h1 className="text-xl font-orbitron font-bold tracking-wider">
+            <Globe className="w-7 h-7 md:w-8 md:h-8 text-accent-cyan" />
+            <h1 className="text-lg md:text-xl font-orbitron font-bold tracking-wider">
               <span className="text-white">SENTINEL</span>
               <span className="text-accent-cyan">GLOBE</span>
             </h1>
           </div>
-          <div className="h-8 w-px bg-accent-cyan/30" />
+          <div className="hidden sm:block h-8 w-px bg-accent-cyan/30" />
           <div className="flex items-center gap-1 text-xs text-muted">
             <Activity className="w-3 h-3 text-emerald-400 animate-pulse" />
             <span>LIVE</span>
           </div>
         </div>
 
-        {/* Stats Bar */}
-        <div className="flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-6">
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
@@ -178,14 +175,13 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Time Range */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <div className="flex bg-bg-panel rounded-lg border border-border/50 p-1">
             {['1h', '6h', '24h', '7d'].map((range) => (
               <button
                 key={range}
                 onClick={() => setTimeRange(range)}
-                className={`px-3 py-1 text-xs rounded transition-colors ${
+                className={`px-2.5 py-1 text-[10px] md:text-xs rounded transition-colors ${
                   timeRange === range 
                     ? 'bg-accent-cyan text-bg' 
                     : 'text-muted hover:text-white'
@@ -198,41 +194,53 @@ export default function Home() {
         </div>
       </header>
 
-      {/* News Ticker */}
-      <NewsTicker />
+      <div className="hidden md:block absolute top-14 md:top-16 left-0 right-0 z-30">
+        <NewsTicker />
+      </div>
 
-      {/* Main Content */}
-      <div className="absolute top-16 bottom-0 left-0 right-0 flex">
-        {/* Left Sidebar - Filters */}
-        <FilterSidebar 
-          filter={filter} 
-          setFilter={setFilter}
-          severityFilter={severityFilter}
-          setSeverityFilter={setSeverityFilter}
-          events={events}
-        />
+      <div className="absolute top-14 md:top-16 bottom-0 left-0 right-0 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+        <div className="hidden lg:block">
+          <FilterSidebar 
+            filter={filter} 
+            setFilter={setFilter}
+            severityFilter={severityFilter}
+            setSeverityFilter={setSeverityFilter}
+            events={events}
+          />
+        </div>
 
-        {/* Center - Globe */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative min-h-[56svh] lg:min-h-0">
           <GlobeScene 
             events={filteredEvents} 
             onEventSelect={setSelectedEvent}
             selectedEvent={selectedEvent}
           />
 
-          {/* Bottom Stats Overlay */}
-          <div className="absolute bottom-4 left-4 bg-bg-surface/80 backdrop-blur-xl rounded-lg border border-accent-cyan/20 p-4">
+          <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 bg-bg-surface/80 backdrop-blur-xl rounded-lg border border-accent-cyan/20 p-3 md:p-4 max-w-[260px] md:max-w-none">
             <p className="text-xs text-muted mb-2 flex items-center gap-2">
               <Shield className="w-3 h-3" />
               Active Global Events
             </p>
-            <p className="text-2xl font-orbitron font-bold text-white">{filteredEvents.length}</p>
+            <p className="text-xl md:text-2xl font-orbitron font-bold text-white">{filteredEvents.length}</p>
             <p className="text-xs text-muted">of {stats.total} total events</p>
           </div>
         </div>
 
-        {/* Right Sidebar - Markets */}
-        <div className="w-80 p-4 bg-bg-surface/50 backdrop-blur-xl border-l border-accent-cyan/10">
+        <div className="hidden lg:block w-80 p-4 bg-bg-surface/50 backdrop-blur-xl border-l border-accent-cyan/10">
+          <MarketCorrelations 
+            eventCategory={selectedEvent?.category}
+            eventTags={selectedEvent?.tags}
+          />
+        </div>
+
+        <div className="lg:hidden px-3 pb-4 pt-3 grid gap-3">
+          <FilterSidebar 
+            filter={filter} 
+            setFilter={setFilter}
+            severityFilter={severityFilter}
+            setSeverityFilter={setSeverityFilter}
+            events={events}
+          />
           <MarketCorrelations 
             eventCategory={selectedEvent?.category}
             eventTags={selectedEvent?.tags}
@@ -240,7 +248,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Event Detail Panel */}
       {selectedEvent && (
         <EventPanel event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       )}
