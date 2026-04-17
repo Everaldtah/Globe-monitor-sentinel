@@ -1,5 +1,6 @@
 import { BaseProvider, ProviderResult } from './base';
 import { GlobalEvent, Severity, EventCategory } from '../types';
+import { FirecrawlProvider } from './firecrawl';
 
 function calculateSeverity(score: number): Severity {
   if (score >= 8) return 'critical';
@@ -146,7 +147,7 @@ export class EventsAggregator {
   private providers: BaseProvider<GlobalEvent[]>[];
 
   constructor() {
-    this.providers = [new USGSProvider(), new GDELTProvider()];
+    this.providers = [new USGSProvider(), new GDELTProvider(), new FirecrawlProvider()];
   }
 
   async fetchAll(): Promise<ProviderResult<GlobalEvent[]>> {
@@ -179,7 +180,7 @@ export class EventsAggregator {
       data: allEvents.slice(0, 50),
       degraded: hasDegraded,
       error: errors.length > 0 ? errors.join('; ') : undefined,
-      source: 'USGS/GDELT Aggregator',
+      source: 'USGS/GDELT/Firecrawl Aggregator',
       timestamp: new Date().toISOString(),
     };
   }
